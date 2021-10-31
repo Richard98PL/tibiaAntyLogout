@@ -1,5 +1,6 @@
 from pynput.keyboard import Key, Controller
 import win32gui
+import win32con
 import re
 import time
 import schedule
@@ -38,10 +39,14 @@ class WindowMgr:
 #hwndMain = w._handle
 
 def antyLogout():
-    global w
-    w = WindowMgr()
-    w.find_window_wildcard(".*Tibia.*")
-    w.set_foreground()
+    currentWindowManager = WindowMgr()
+    currentWindow = win32gui.GetForegroundWindow()
+    currentWindowManager._handle = currentWindow
+
+    tibiaWindowManager = WindowMgr()
+    tibiaWindowManager.find_window_wildcard(".*Tibia.*")
+    win32gui.ShowWindow(tibiaWindowManager._handle, win32con.SW_MAXIMIZE)
+    tibiaWindowManager.set_foreground()
 
     keyboard.press(Key.ctrl)
     movementKeys = [Key.up, Key.down]
@@ -49,15 +54,20 @@ def antyLogout():
         keyboard.tap(key)
         time.sleep( randint(15,31) / 1000)
     keyboard.release(Key.ctrl)
+
     now = datetime.datetime.now()
     print(now.hour, now.minute, now.second)
+
+    win32gui.ShowWindow(tibiaWindowManager._handle, win32con.SW_MINIMIZE)
+    currentWindowManager.set_foreground()
+    
     
     
 
 antyLogout()
-schedule.every(5).minutes.do(antyLogout)
+schedule.every(6).minutes.do(antyLogout)
 while 1:
     schedule.run_pending()
-    time.sleep(60)
+    time.sleep(30)
 
 
