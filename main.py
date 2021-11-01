@@ -36,7 +36,7 @@ class WindowMgr:
         win32gui.GetWindowRect(self._handle)
 global tibiaWindowManager
 tibiaWindowManager = WindowMgr()
-tibiaWindowManager.find_window_wildcard(".*Tibia.*")
+tibiaWindowManager.find_window_wildcard("Tibia - *")
 
 def antyLogout():
     currentWindowManager = WindowMgr()
