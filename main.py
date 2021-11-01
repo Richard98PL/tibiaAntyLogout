@@ -3,7 +3,6 @@ import win32gui
 import win32con
 import re
 import time
-import schedule
 import datetime
 from random import randint
 keyboard = Controller()
@@ -36,8 +35,6 @@ class WindowMgr:
     def get_rectangle(self):
         win32gui.GetWindowRect(self._handle)
 
-#hwndMain = w._handle
-
 def antyLogout():
     currentWindowManager = WindowMgr()
     currentWindow = win32gui.GetForegroundWindow()
@@ -45,8 +42,10 @@ def antyLogout():
 
     tibiaWindowManager = WindowMgr()
     tibiaWindowManager.find_window_wildcard(".*Tibia.*")
-    win32gui.ShowWindow(tibiaWindowManager._handle, win32con.SW_MAXIMIZE)
-    tibiaWindowManager.set_foreground()
+    
+    if currentWindowManager._handle != tibiaWindowManager._handle:
+        win32gui.ShowWindow(tibiaWindowManager._handle, win32con.SW_MAXIMIZE)
+        tibiaWindowManager.set_foreground()
 
     keyboard.press(Key.ctrl)
     movementKeys = [Key.up, Key.down]
@@ -58,16 +57,11 @@ def antyLogout():
     now = datetime.datetime.now()
     print(now.hour, now.minute, now.second)
 
-    win32gui.ShowWindow(tibiaWindowManager._handle, win32con.SW_MINIMIZE)
-    currentWindowManager.set_foreground()
+    if currentWindowManager._handle != tibiaWindowManager._handle:
+        win32gui.ShowWindow(tibiaWindowManager._handle, win32con.SW_MINIMIZE)
+        currentWindowManager.set_foreground()
     
-    
-    
-
 antyLogout()
-schedule.every(6).minutes.do(antyLogout)
-while 1:
-    schedule.run_pending()
-    time.sleep(30)
-
-
+while True:
+    time.sleep(6*60 + randint(0,13))
+    antyLogout()
