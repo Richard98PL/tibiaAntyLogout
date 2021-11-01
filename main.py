@@ -34,16 +34,15 @@ class WindowMgr:
 
     def get_rectangle(self):
         win32gui.GetWindowRect(self._handle)
-global tibiaWindowManager
-tibiaWindowManager = WindowMgr()
-tibiaWindowManager.find_window_wildcard("Tibia - *")
 
 def antyLogout():
     currentWindowManager = WindowMgr()
     currentWindow = win32gui.GetForegroundWindow()
     currentWindowManager._handle = currentWindow
 
-    global tibiaWindowManager #prevents errors.. idk.. too often calling that gives an error
+    tibiaWindowManager = WindowMgr()
+    tibiaWindowManager.find_window_wildcard("Tibia - *")
+    
     if currentWindowManager._handle != tibiaWindowManager._handle:
         win32gui.ShowWindow(tibiaWindowManager._handle, win32con.SW_MAXIMIZE)
         tibiaWindowManager.set_foreground()
